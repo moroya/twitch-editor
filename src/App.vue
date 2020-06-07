@@ -16,7 +16,7 @@ export default {
 
   data() {
     return {
-      videoId: "556433533"
+      videoId: null
     };
   },
 
