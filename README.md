@@ -1,4 +1,6 @@
-# ljl-timeline
+# Twitch Editor
+
+You can create a preview from the time range of the Twitch video.
 
 ## Project setup
 ```
