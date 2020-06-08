@@ -25,6 +25,7 @@
       <button @click="insertCurrentTime()">ここから30秒を挿入</button>
     </div>
     <textarea v-model="script" id="script" ref="script"></textarea>
+    <span>再生時間 : {{ time }}</span>
   </div>
 </template>
 
@@ -54,6 +55,17 @@ export default {
       script: demoText,
       timeline: []
     };
+  },
+
+  computed: {
+    time() {
+      const time = this.timeline.reduce((acc, val) => {
+        if (val.type === "video") return acc + (val.out - val.in);
+        else return acc;
+      }, 0);
+      const format = dayjs.unix(time).utc();
+      return format.format("HH:mm:ss");
+    }
   },
 
   watch: {
