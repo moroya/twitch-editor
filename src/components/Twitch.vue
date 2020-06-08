@@ -25,7 +25,7 @@
       <button @click="insertCurrentTime()">ここから30秒を挿入</button>
     </div>
     <textarea v-model="script" id="script" ref="script"></textarea>
-    <span>再生時間 : {{ time }}</span>
+    <div>再生時間 : {{ time }}</div>
   </div>
 </template>
 
