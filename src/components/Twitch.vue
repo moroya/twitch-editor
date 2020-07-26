@@ -24,8 +24,16 @@
       <button @click="beginning()">最初から再生</button> |
       <button @click="insertCurrentTime()">ここから30秒を挿入</button>
     </div>
-    <textarea v-model="script" id="script" ref="script"></textarea>
-    <div>再生時間 : {{ time }}</div>
+
+    <div class="flex">
+      <textarea v-model="script" id="script" ref="script"></textarea>
+      <div class="times">
+        <div v-for="time in times" :key="time.format" @click="seek(time.s)">
+          {{ time.format }}
+        </div>
+      </div>
+    </div>
+    <div class="total">合計時間 : {{ time }}</div>
   </div>
 </template>
 
@@ -65,6 +73,22 @@ export default {
       }, 0);
       const format = dayjs.unix(time).utc();
       return format.format("HH:mm:ss");
+    },
+
+    times() {
+      const ret = [];
+
+      this.timeline.forEach(val => {
+        if (val.type === "video") {
+          const format = dayjs.unix(val.in).utc();
+          ret.push({
+            s: val.in,
+            format: format.format("HH:mm:ss")
+          });
+        }
+      });
+
+      return ret;
     }
   },
 
@@ -179,6 +203,10 @@ export default {
       });
     },
 
+    seek(s) {
+      this.$refs.player.seek(s);
+    },
+
     parseTimeInSeconds(time) {
       time = time.match(/:/g).length === 1 ? `00:${time}` : time;
       return Date.parse(`01 Jan 1970 ${time} GMT`) / 1000;
@@ -261,9 +289,42 @@ a {
   justify-content: center;
 }
 
-#script {
+.flex {
+  display: flex;
+  justify-content: space-between;
   width: 960px;
   height: 400px;
+  margin: 10px auto;
+  font-size: 13px;
+}
+
+#script {
+  width: 860px;
+  height: 400px;
+  margin: 0;
+}
+
+.times {
+  width: 100px;
+  text-align: left;
+}
+
+.times div {
+  margin-left: 5px;
+  margin-bottom: 5px;
+  color: #0000ff;
+  cursor: pointer;
+}
+
+.times div:hover {
+  text-decoration: underline;
+}
+
+.total {
+  text-align: left;
+  width: 960px;
+  margin: 10px auto;
+  font-size: 13px;
 }
 
 textarea {
