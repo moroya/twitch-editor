@@ -22,7 +22,16 @@
       />
       <label for="preview">プレビューモード</label> |
       <button @click="beginning()">最初から再生</button> |
-      <button @click="insertCurrentTime()">ここから30秒を挿入</button>
+      <button @click="insertCurrentTime()">ここから30秒を挿入</button> |
+      <input
+        v-model="jump"
+        type="text"
+        name="seek"
+        id="seek"
+        placeholder="3:47:13"
+        @blur="goto()"
+      />
+      にジャンプ
     </div>
 
     <div class="flex">
@@ -60,6 +69,7 @@ export default {
       volume: 1,
       previewMode: false,
       caption: "",
+      jump: "",
       script: demoText,
       timeline: []
     };
@@ -203,11 +213,23 @@ export default {
       });
     },
 
+    goto() {
+      const time = this.parseTimeInSeconds(this.jump);
+      if (time !== null) {
+        this.seek(time);
+      }
+    },
+
     seek(s) {
-      this.$refs.player.seek(s);
+      this.$refs.player.play();
+      setTimeout(() => {
+        this.$refs.player.seek(s);
+      }, 300);
     },
 
     parseTimeInSeconds(time) {
+      if (!/:/.test(time)) return null;
+
       time = time.match(/:/g).length === 1 ? `00:${time}` : time;
       return Date.parse(`01 Jan 1970 ${time} GMT`) / 1000;
     },
@@ -254,6 +276,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.twitch {
+  font-size: 13px;
+}
+
 h3 {
   margin: 40px 0 0;
 }
@@ -289,13 +315,16 @@ a {
   justify-content: center;
 }
 
+#seek {
+  width: 55px;
+}
+
 .flex {
   display: flex;
   justify-content: space-between;
   width: 960px;
   height: 400px;
   margin: 10px auto;
-  font-size: 13px;
 }
 
 #script {
@@ -324,7 +353,6 @@ a {
   text-align: left;
   width: 960px;
   margin: 10px auto;
-  font-size: 13px;
 }
 
 textarea {
