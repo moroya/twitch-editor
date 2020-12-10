@@ -60,7 +60,7 @@ export default {
   name: "Twitch",
 
   props: {
-    video: String
+    video: String,
   },
 
   data() {
@@ -71,7 +71,7 @@ export default {
       caption: "",
       jump: "",
       script: demoText,
-      timeline: []
+      timeline: [],
     };
   },
 
@@ -88,18 +88,18 @@ export default {
     times() {
       const ret = [];
 
-      this.timeline.forEach(val => {
+      this.timeline.forEach((val) => {
         if (val.type === "video") {
           const format = dayjs.unix(val.in).utc();
           ret.push({
             s: val.in,
-            format: format.format("HH:mm:ss")
+            format: format.format("HH:mm:ss"),
           });
         }
       });
 
       return ret;
-    }
+    },
   },
 
   watch: {
@@ -116,13 +116,14 @@ export default {
 
       // 範囲内？
       const inRange = this.timeline.find(
-        range => range.type === "video" && range.in <= time && time < range.out
+        (range) =>
+          range.type === "video" && range.in <= time && time < range.out
       );
 
       // キャプション表示？
       if (inRange) {
         const caption = this.timeline.find(
-          range => range.type === "caption" && range.in === time
+          (range) => range.type === "caption" && range.in === time
         );
 
         if (caption) {
@@ -134,7 +135,7 @@ export default {
 
         // スキップ対象範囲？
       } else {
-        const skipped = this.timeline.find(range => {
+        const skipped = this.timeline.find((range) => {
           if (range.type === "video" && time < range.in) {
             this.$refs.player.seek(range.in);
             return true;
@@ -148,7 +149,7 @@ export default {
           this.$refs.player.seek(0);
         }
       }
-    }
+    },
   },
 
   methods: {
@@ -158,7 +159,7 @@ export default {
 
       this.timeline = [];
 
-      lines.forEach(line => {
+      lines.forEach((line) => {
         // 行頭が//ならコメント
         if (/^ *\/\//.test(line)) {
           return true;
@@ -170,14 +171,14 @@ export default {
             .match(/(?<in>[\d:]+) *- *(?<out>[\d:]+)/i);
 
           if (match && match.groups.in && match.groups.out) {
-            const range = [match.groups.in, match.groups.out].map(time =>
+            const range = [match.groups.in, match.groups.out].map((time) =>
               this.parseTimeInSeconds(time)
             );
 
             this.timeline.push({
               type: "video",
               in: range[0],
-              out: range[1]
+              out: range[1],
             });
           }
 
@@ -205,7 +206,7 @@ export default {
               this.timeline.push({
                 type: "caption",
                 msg: line,
-                in: inTime
+                in: inTime,
               });
             }
           }
@@ -265,12 +266,12 @@ export default {
       this.$refs.player.pause();
       this.parseScript();
       setInterval(this.getCurrentTime, 300);
-    }
+    },
   },
 
   components: {
-    VueTwitchPlayer
-  }
+    VueTwitchPlayer,
+  },
 };
 </script>
 

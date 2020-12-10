@@ -16,7 +16,7 @@ export default {
 
   data() {
     return {
-      videoId: null
+      videoId: null,
     };
   },
 
@@ -24,12 +24,12 @@ export default {
     changeTwitchUrl(event) {
       const match = event.target.value.match(/videos\/(?<id>\d+)/);
       this.videoId = match.groups && match.groups.id ? match.groups.id : null;
-    }
+    },
   },
 
   components: {
-    Twitch
-  }
+    Twitch,
+  },
 };
 </script>
 
